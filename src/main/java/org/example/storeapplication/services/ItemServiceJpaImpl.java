@@ -6,11 +6,8 @@ import org.example.storeapplication.mappers.ItemMapper;
 import org.example.storeapplication.models.ItemDTO;
 import org.example.storeapplication.repositories.ItemRepository;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Optional;
 import java.util.UUID;
