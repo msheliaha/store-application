@@ -47,7 +47,6 @@ public class AuthController {
         Authentication authenticationResponse = this.authenticationManager.authenticate(authenticationRequest);
 
         SecurityContextHolder.getContext().setAuthentication(authenticationResponse);
-
         HttpSession session = httpRequest.getSession(true);
         session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
         return ResponseEntity.ok(Map.of("sessionId", session.getId()));

@@ -4,7 +4,7 @@ create table item (
     id varchar(36) not null,
     item_name varchar(255) not null,
     available integer,
-    price decimal not null,
+    price decimal(10, 2) not null,
     create_date datetime(6),
     update_date datetime(6),
     version integer,

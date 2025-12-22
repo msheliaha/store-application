@@ -37,8 +37,8 @@ public class BootstrapData implements CommandLineRunner {
         for (int i = 1; i <= 30; i++) {
             Item item = Item.builder()
                     .name("Test Item " + i)
-                    .available(i * 3)
-                    .price(new BigDecimal("9.99").add(new BigDecimal(rand.nextInt(0, i))))
+                    .available(rand.nextInt(2,25))
+                    .price(new BigDecimal(rand.nextDouble(5, 100)))
                     .build();
 
             items.add(item);
