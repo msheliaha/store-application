@@ -2,9 +2,11 @@ package org.example.storeapplication.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.example.storeapplication.services.ItemService;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
@@ -20,13 +22,14 @@ public class ItemController {
     private final ItemService itemService;
 
     @GetMapping(ITEM_PATH)
-    public ResponseEntity getAll(){
-        return ResponseEntity.ok().body(itemService.getAllItems());
+    public ResponseEntity getAll(Pageable pageable){
+        return ResponseEntity.ok().body(itemService.getAllItems(pageable));
     }
 
     @GetMapping(ITEM_PATH_ID)
     public ResponseEntity getById(@PathVariable("itemId") UUID itemId){
 
+        return ResponseEntity.ok(itemService.getItemById(itemId));
     }
 
 }

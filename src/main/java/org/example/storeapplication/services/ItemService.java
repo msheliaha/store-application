@@ -1,13 +1,15 @@
 package org.example.storeapplication.services;
 
-import org.example.storeapplication.entities.Item;
+import org.example.storeapplication.models.ItemDTO;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public interface ItemService {
 
-    Page<Item> getAllItems();
+    Page<ItemDTO> getAllItems(Pageable pageable);
 
-    Page<Item> getItemById(UUID id);
+    Optional<ItemDTO> getItemById(UUID id);
 }

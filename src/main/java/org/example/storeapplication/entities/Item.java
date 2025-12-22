@@ -1,14 +1,19 @@
 package org.example.storeapplication.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.type.SqlTypes;
 
 
 import java.math.BigDecimal;
@@ -19,12 +24,14 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class Item {
 
     @Id
     @GeneratedValue(generator = "UUID")
     @UuidGenerator
     @Column(length = 36, columnDefinition = "varchar", updatable = false, nullable = false)
+    @JdbcTypeCode(SqlTypes.CHAR)
     private UUID id;
 
     @Version
@@ -37,6 +44,7 @@ public class Item {
     private Integer available;
 
     @NotNull
+    @DecimalMin("0.01")
     private BigDecimal price;
 
     @CreationTimestamp
@@ -44,6 +52,4 @@ public class Item {
 
     @UpdateTimestamp
     private LocalDateTime updateDate;
-
-
 }
