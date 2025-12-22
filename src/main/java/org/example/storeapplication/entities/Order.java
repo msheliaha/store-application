@@ -1,9 +1,7 @@
 package org.example.storeapplication.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,9 +12,10 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.annotations.UuidGenerator;
 import org.hibernate.type.SqlTypes;
 
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -24,7 +23,8 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Item {
+@Table(name="order_table")
+public class Order {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -33,19 +33,26 @@ public class Item {
     @JdbcTypeCode(SqlTypes.CHAR)
     private UUID id;
 
-    @Column(name = "item_name")
+    @OneToMany(mappedBy = "order")
+    private List<OrderItem> orderItems = new ArrayList<>();
+
     @NotBlank
-    private String name;
+    private String userEmail;
 
-    private Integer available;
-
-    @NotNull
-    @DecimalMin("0.01")
-    private BigDecimal price;
+    private BigDecimal total;
 
     @CreationTimestamp
     private LocalDateTime createDate;
-
     @UpdateTimestamp
     private LocalDateTime updateDate;
+
+    public void addItem(Item item, Integer quantity){
+        OrderItem orderItem = new OrderItem();
+        orderItem.setItem(item);
+        orderItem.setQuantity(quantity);
+        orderItem.setPrice(item.getPrice());
+
+        orderItem.setOrder(this);
+        this.orderItems.add(orderItem);
+    }
 }

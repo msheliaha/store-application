@@ -13,7 +13,6 @@ import java.util.UUID;
 public class ItemDTO {
 
     private UUID id;
-    private Integer version;
 
     private String name;
     private Integer available;
