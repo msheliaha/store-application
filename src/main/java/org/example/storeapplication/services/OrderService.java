@@ -12,4 +12,6 @@ public interface OrderService {
 
     Optional<OrderDTO> getOrderById(UUID orderId);
 
+    OrderDTO cancelOrder(UUID orderId, String email);
+
 }
