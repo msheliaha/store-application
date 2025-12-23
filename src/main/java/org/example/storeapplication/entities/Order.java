@@ -2,6 +2,7 @@ package org.example.storeapplication.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -39,19 +40,18 @@ public class Order {
     @NotBlank
     private String userEmail;
 
-    private BigDecimal total;
+    @NotNull
+    @JdbcTypeCode(value = SqlTypes.SMALLINT)
+    private OrderStatus orderStatus;
+
+    private BigDecimal total = BigDecimal.ZERO;
 
     @CreationTimestamp
     private LocalDateTime createDate;
     @UpdateTimestamp
     private LocalDateTime updateDate;
 
-    public void addItem(Item item, Integer quantity){
-        OrderItem orderItem = new OrderItem();
-        orderItem.setItem(item);
-        orderItem.setQuantity(quantity);
-        orderItem.setPrice(item.getPrice());
-
+    public void addItem(OrderItem orderItem){
         orderItem.setOrder(this);
         this.orderItems.add(orderItem);
     }
