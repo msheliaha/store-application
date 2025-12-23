@@ -34,7 +34,7 @@ public class Order {
     @JdbcTypeCode(SqlTypes.CHAR)
     private UUID id;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
 
     @NotBlank
@@ -44,7 +44,7 @@ public class Order {
     @JdbcTypeCode(value = SqlTypes.SMALLINT)
     private OrderStatus orderStatus;
 
-    private BigDecimal total = BigDecimal.ZERO;
+    private BigDecimal total;
 
     @CreationTimestamp
     private LocalDateTime createDate;
