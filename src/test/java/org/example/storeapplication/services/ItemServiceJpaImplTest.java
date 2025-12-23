@@ -35,7 +35,7 @@ public class ItemServiceJpaImplTest {
     private ItemServiceJpaImpl itemService;
 
     @Test
-    void getAllItems() {
+    void getAllItems_ShouldReturnPageOfDtos() {
         Pageable pageable = PageRequest.of(0, 10);
 
         Item item = getTestItem();
@@ -56,7 +56,7 @@ public class ItemServiceJpaImplTest {
     }
 
     @Test
-    void getItemByIdExists() {
+    void getItemById_WhenItemExists_ShouldReturnOptionalOfDto() {
         UUID id = UUID.randomUUID();
         Item item = getTestItem();
         ItemDTO itemDTO = getTestDto();
@@ -72,7 +72,7 @@ public class ItemServiceJpaImplTest {
     }
 
     @Test
-    void getItemByIdNotFound() {
+    void getItemById_WhenNotFound_ShouldThrowException() {
         UUID id = UUID.randomUUID();
         when(itemRepository.findById(id)).thenReturn(Optional.empty());
 
