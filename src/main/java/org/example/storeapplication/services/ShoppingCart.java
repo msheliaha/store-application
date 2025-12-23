@@ -5,7 +5,6 @@ import org.example.storeapplication.entities.Item;
 import org.example.storeapplication.entities.Order;
 import org.example.storeapplication.entities.OrderItem;
 import org.example.storeapplication.entities.OrderStatus;
-import org.example.storeapplication.exception.EmptyCartException;
 import org.example.storeapplication.exception.ItemNotAvailableException;
 import org.example.storeapplication.exception.NotFoundException;
 import org.example.storeapplication.models.AddToCartRequest;
