@@ -1,7 +1,5 @@
 package org.example.storeapplication.services;
 
-import org.example.storeapplication.config.SecurityConfig;
-import org.example.storeapplication.config.TokenCleanupConfig;
 import org.example.storeapplication.entities.ResetToken;
 import org.example.storeapplication.entities.User;
 import org.example.storeapplication.events.ResetPasswordEvent;

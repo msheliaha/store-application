@@ -11,12 +11,12 @@ public class ResetPasswordListener {
 
     @Value("${app.base-url}")
     private String basePath;
-    private final String fullPath = basePath + PasswordResetController.RESET_PATH + "?token=";
 
     @EventListener
     public void listen(ResetPasswordEvent event){
 
         // Sending link to reset password on user email
+        String fullPath = basePath + PasswordResetController.RESET_PATH + "?token=";
         String resetUrl = fullPath+event.resetToken();
         System.out.println("Link to reset password for "+event.email());
         System.out.println(resetUrl);
