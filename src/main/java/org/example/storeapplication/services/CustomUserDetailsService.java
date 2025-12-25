@@ -16,9 +16,14 @@ import java.util.Set;
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final LoginAttemptService loginAttemptService;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        if(loginAttemptService.isBlocked()){
+            throw new RuntimeException("blocked");
+        }
+
         User user = userRepository.findById(email)
                 .orElseThrow(() ->
                         new UsernameNotFoundException(email+ " not found"));

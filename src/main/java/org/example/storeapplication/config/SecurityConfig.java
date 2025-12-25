@@ -4,6 +4,7 @@ import org.example.storeapplication.controllers.AuthController;
 import org.example.storeapplication.controllers.PasswordResetController;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationEventPublisher;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -40,10 +41,16 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService,
+                                                       PasswordEncoder passwordEncoder,
+                                                       AuthenticationEventPublisher authenticationEventPublisher) {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider(userDetailsService);
         authenticationProvider.setPasswordEncoder(passwordEncoder);
 
-        return new ProviderManager(authenticationProvider);
+        ProviderManager providerManager = new ProviderManager(authenticationProvider);
+
+        providerManager.setAuthenticationEventPublisher(authenticationEventPublisher);
+
+        return providerManager;
     }
 }
