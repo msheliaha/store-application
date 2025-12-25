@@ -7,5 +7,6 @@ create table item (
     price decimal(10, 2) not null,
     create_date datetime(6),
     update_date datetime(6),
+    version integer,
     primary key (id)
 );

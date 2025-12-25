@@ -2,6 +2,7 @@ package org.example.storeapplication.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,11 +34,15 @@ public class Order {
     @JdbcTypeCode(SqlTypes.CHAR)
     private UUID id;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
 
     @NotBlank
     private String userEmail;
+
+    @NotNull
+    @JdbcTypeCode(value = SqlTypes.SMALLINT)
+    private OrderStatus orderStatus;
 
     private BigDecimal total;
 
@@ -46,12 +51,7 @@ public class Order {
     @UpdateTimestamp
     private LocalDateTime updateDate;
 
-    public void addItem(Item item, Integer quantity){
-        OrderItem orderItem = new OrderItem();
-        orderItem.setItem(item);
-        orderItem.setQuantity(quantity);
-        orderItem.setPrice(item.getPrice());
-
+    public void addItem(OrderItem orderItem){
         orderItem.setOrder(this);
         this.orderItems.add(orderItem);
     }

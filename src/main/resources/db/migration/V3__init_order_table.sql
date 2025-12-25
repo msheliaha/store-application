@@ -5,6 +5,7 @@ drop table if exists order_item;
 create table order_table(
     id varchar(36) not null,
     user_email varchar(255) not null,
+    order_status smallint not null,
     create_date datetime(6),
     update_date datetime(6),
     total decimal(10, 2) not null,

@@ -33,6 +33,9 @@ public class Item {
     @JdbcTypeCode(SqlTypes.CHAR)
     private UUID id;
 
+    @Version
+    private Integer version;
+
     @Column(name = "item_name")
     @NotBlank
     private String name;

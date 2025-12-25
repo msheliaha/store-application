@@ -1,6 +1,7 @@
 package org.example.storeapplication.config;
 
 import org.example.storeapplication.controllers.AuthController;
+import org.example.storeapplication.controllers.PasswordResetController;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationEventPublisher;
@@ -29,7 +30,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http){
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorized->authorized
-                .requestMatchers(AuthController.LOGIN_PATH, AuthController.REGISTER_PATH).permitAll()
+                .requestMatchers(AuthController.LOGIN_PATH, AuthController.REGISTER_PATH,
+                        PasswordResetController.RESET_PATH, PasswordResetController.RESET_PATH_CONFIRM).permitAll()
                 .anyRequest().authenticated())
                 .sessionManagement(s -> s
                         .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)

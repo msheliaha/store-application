@@ -29,5 +29,4 @@ public class ItemController {
 
         return ResponseEntity.ok(itemService.getItemById(itemId));
     }
-
 }

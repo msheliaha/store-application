@@ -2,14 +2,19 @@ package org.example.storeapplication.services;
 
 import lombok.RequiredArgsConstructor;
 import org.example.storeapplication.entities.Item;
+import org.example.storeapplication.entities.Order;
+import org.example.storeapplication.entities.OrderItem;
+import org.example.storeapplication.entities.OrderStatus;
 import org.example.storeapplication.exception.ItemNotAvailableException;
 import org.example.storeapplication.exception.NotFoundException;
 import org.example.storeapplication.models.AddToCartRequest;
 import org.example.storeapplication.models.CartContent;
 import org.example.storeapplication.models.CartEntity;
 import org.example.storeapplication.repositories.ItemRepository;
+import org.example.storeapplication.repositories.OrderRepository;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.annotation.SessionScope;
 
 import java.math.BigDecimal;
@@ -21,6 +26,7 @@ import java.util.*;
 public class ShoppingCart {
 
     private final ItemRepository itemRepository;
+    private final OrderRepository orderRepository;
     private final Map<UUID, Integer> items = new HashMap<>();
 
 
@@ -59,7 +65,13 @@ public class ShoppingCart {
 
             Item item = itemOpt.get();
             if(item.getAvailable()<quantity){
-                notAvailableItems.add(new CartEntity(null, id, item.getName(), quantity, null));
+                notAvailableItems.add(CartEntity.builder()
+                                .itemId(id)
+                                .itemName(item.getName())
+                                .quantity(quantity)
+                                .price(item.getPrice())
+                                .subtotal(item.getPrice().multiply(BigDecimal.valueOf(quantity)))
+                        .build());
                 return;
             }
 
@@ -68,6 +80,7 @@ public class ShoppingCart {
                             .itemId(id)
                             .itemName(item.getName())
                             .quantity(quantity)
+                            .price(item.getPrice())
                             .subtotal(item.getPrice().multiply(BigDecimal.valueOf(quantity)))
                     .build());
         });
@@ -79,5 +92,39 @@ public class ShoppingCart {
 
     public void clearCart(){
         items.clear();
+    }
+
+    @Transactional
+    public void checkout(String userEmail){
+
+        Order order = new Order();
+        order.setUserEmail(userEmail);
+        order.setOrderStatus(OrderStatus.NEW);
+
+        items.entrySet().stream()
+                .map(entry->addItemToOrder(entry.getKey(),entry.getValue()))
+                .forEach(order::addItem);
+
+        BigDecimal total = order.getOrderItems().stream()
+                .map(item ->item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        order.setTotal(total);
+        orderRepository.save(order);
+        clearCart();
+    }
+
+    private OrderItem addItemToOrder(UUID itemId, Integer quantity){
+        Item item = itemRepository.findById(itemId).orElseThrow(ItemNotAvailableException::new);
+        if(item.getAvailable()<quantity){
+            throw new ItemNotAvailableException();
+        }
+
+        item.setAvailable(item.getAvailable()-quantity);
+
+        return OrderItem.builder()
+                .item(item)
+                .quantity(quantity)
+                .price(item.getPrice())
+                .build();
     }
 }
