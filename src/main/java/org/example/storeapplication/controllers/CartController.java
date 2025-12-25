@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.UUID;
 
 @RestController
@@ -16,6 +17,7 @@ public class CartController {
 
     public static final String CART_PATH = "/api/v1/cart";
     public static final String CART_PATH_ID = "/api/v1/cart/{itemId}";
+    public static final String CART_PATH_CHECKOUT = "/api/v1/cart/checkout";
 
 
     private final ShoppingCart shoppingCart;
@@ -47,5 +49,15 @@ public class CartController {
         CartContent content = shoppingCart.getCart();
 
         return ResponseEntity.ok(content);
+    }
+
+    @PostMapping(CART_PATH_CHECKOUT)
+    public ResponseEntity checkoutOrder(Principal principal){
+
+        String email = principal.getName();
+
+        shoppingCart.checkout(email);
+
+        return ResponseEntity.ok("New Order Created for " + email);
     }
 }

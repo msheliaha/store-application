@@ -12,5 +12,6 @@ public record CartEntity(
         UUID itemId,
         String itemName,
         Integer quantity,
+        BigDecimal price,
         BigDecimal subtotal
 ) {}
