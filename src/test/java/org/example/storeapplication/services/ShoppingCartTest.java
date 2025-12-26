@@ -51,11 +51,10 @@ class ShoppingCartTest {
     }
 
     @Test
-    void addToCart_Success() {
+    void addToCart_WhenEmpty_ShouldPutItem() {
 
         AddToCartRequest request = new AddToCartRequest(itemId, 2);
         when(itemRepository.findById(itemId)).thenReturn(Optional.of(item));
-
 
         shoppingCart.addToCart(request);
 
@@ -67,7 +66,64 @@ class ShoppingCartTest {
     }
 
     @Test
-    void addToCart_ItemNotFound_ShouldThrowsException() {
+    void addToCart_WhenNotEmpty_ShouldAddQuantity() {
+
+        AddToCartRequest request = new AddToCartRequest(itemId, 2);
+        when(itemRepository.findById(itemId)).thenReturn(Optional.of(item));
+
+        shoppingCart.addToCart(request);
+
+        CartContent content = shoppingCart.getCart();
+
+        assertEquals(1, content.getAvailableItems().size());
+        assertEquals(2, content.getAvailableItems().get(0).quantity());
+
+        shoppingCart.addToCart(request);
+
+        content = shoppingCart.getCart();
+
+        assertEquals(1, content.getAvailableItems().size());
+        assertEquals(4, content.getAvailableItems().get(0).quantity());
+    }
+
+    @Test
+    void putInCart_WhenEmpty_ShouldPutItem() {
+
+        AddToCartRequest request = new AddToCartRequest(itemId, 2);
+        when(itemRepository.findById(itemId)).thenReturn(Optional.of(item));
+
+        shoppingCart.putInCart(request);
+
+        when(itemRepository.findById(itemId)).thenReturn(Optional.of(item));
+        CartContent content = shoppingCart.getCart();
+
+        assertEquals(1, content.getAvailableItems().size());
+        assertEquals(2, content.getAvailableItems().get(0).quantity());
+    }
+
+    @Test
+    void putInCart_WhenNotEmpty_ShouldPutItem() {
+
+        AddToCartRequest request = new AddToCartRequest(itemId, 2);
+        when(itemRepository.findById(itemId)).thenReturn(Optional.of(item));
+
+        shoppingCart.addToCart(request);
+
+        CartContent content = shoppingCart.getCart();
+
+        assertEquals(1, content.getAvailableItems().size());
+        assertEquals(2, content.getAvailableItems().get(0).quantity());
+
+        shoppingCart.putInCart(request);
+
+        content = shoppingCart.getCart();
+
+        assertEquals(1, content.getAvailableItems().size());
+        assertEquals(2, content.getAvailableItems().get(0).quantity());
+    }
+
+    @Test
+    void addToCart_WhenItemNotFound_ShouldThrowsException() {
 
         AddToCartRequest request = new AddToCartRequest(itemId, 1);
         when(itemRepository.findById(itemId)).thenReturn(Optional.empty());
@@ -76,7 +132,7 @@ class ShoppingCartTest {
     }
 
     @Test
-    void addToCart_NotEnoughStock_ShouldThrowsException() {
+    void addToCart_WhenNotEnoughStock_ShouldThrowsException() {
         AddToCartRequest request = new AddToCartRequest(itemId, 11);
         when(itemRepository.findById(itemId)).thenReturn(Optional.of(item));
 
@@ -123,7 +179,7 @@ class ShoppingCartTest {
 
 
     @Test
-    void checkout_Success_ShouldCreateOrderAndReduceStock() {
+    void checkout_WhenSuccess_ShouldCreateOrderAndReduceStock() {
 
         when(itemRepository.findById(itemId)).thenReturn(Optional.of(item));
 

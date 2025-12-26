@@ -40,31 +40,45 @@ class CartControllerTest {
 
 
     @Test
-    void addToCart_ValidRequest_ShouldResponseWithOk() throws Exception {
+    void addToCart_WhenValidRequest_ShouldResponseWithOk() throws Exception {
 
         UUID itemId = UUID.randomUUID();
         AddToCartRequest request = new AddToCartRequest(itemId, 2);
 
-        mockMvc.perform(post(CART_PATH)
+        mockMvc.perform(post(CART_ADD_PATH)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
 
-        verify(shoppingCart).addToCart(any(AddToCartRequest.class));
+        verify(shoppingCart).addToCart(request);
     }
 
     @Test
-    void addToCart_InvalidRequest_ShouldReturnBadRequest() throws Exception {
+    void addToCart_WhenInvalidRequest_ShouldReturnBadRequest() throws Exception {
         AddToCartRequest request = new AddToCartRequest(UUID.randomUUID(), -5);
 
-        mockMvc.perform(post(CART_PATH)
+        mockMvc.perform(post(CART_ADD_PATH)
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
 
         verify(shoppingCart, never()).addToCart(any());
+    }
+
+    @Test
+    void updateItemInCart_WhenValidRequest_ShouldPutItemAndResponseOk() throws Exception {
+        UUID itemId = UUID.randomUUID();
+        AddToCartRequest request = new AddToCartRequest(itemId, 2);
+
+        mockMvc.perform(put(CART_UPDATE_PATH)
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isOk());
+
+        verify(shoppingCart).putInCart(request);
     }
 
     @Test

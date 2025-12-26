@@ -36,6 +36,23 @@ public class ShoppingCart {
         if(found.isEmpty()){
             throw new NotFoundException("Item not found");
         }
+
+        Integer requiredQuantity = items.getOrDefault(addToCartRequest.getId(), 0) + addToCartRequest.getQuantity();
+
+        if(found.get().getAvailable()<requiredQuantity){
+            throw new ItemNotAvailableException("Max quantity of this item: "+found.get().getAvailable());
+        }
+
+
+        items.put(addToCartRequest.getId(), requiredQuantity);
+    }
+
+    public void putInCart(AddToCartRequest addToCartRequest){
+        Optional<Item> found = itemRepository.findById(addToCartRequest.getId());
+
+        if(found.isEmpty()){
+            throw new NotFoundException("Item not found");
+        }
         if(found.get().getAvailable()<addToCartRequest.getQuantity()){
             throw new ItemNotAvailableException("Max quantity of this item: "+found.get().getAvailable());
         }

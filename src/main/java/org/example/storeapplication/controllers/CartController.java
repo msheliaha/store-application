@@ -16,16 +16,26 @@ import java.util.UUID;
 public class CartController {
 
     public static final String CART_PATH = "/api/v1/cart";
-    public static final String CART_PATH_ID = "/api/v1/cart/{itemId}";
-    public static final String CART_PATH_CHECKOUT = "/api/v1/cart/checkout";
+    public static final String CART_ADD_PATH = CART_PATH+"/add";
+    public static final String CART_UPDATE_PATH = CART_PATH+"/update";
+    public static final String CART_PATH_ID = CART_PATH+"/{itemId}";
+    public static final String CART_PATH_CHECKOUT = CART_PATH+"checkout";
 
 
     private final ShoppingCart shoppingCart;
 
-    @PostMapping(CART_PATH)
+    @PostMapping(CART_ADD_PATH)
     public ResponseEntity addToCart(@RequestBody @Validated AddToCartRequest request) {
 
         shoppingCart.addToCart(request);
+
+        return ResponseEntity.ok().build();
+    }
+
+    @PutMapping(CART_UPDATE_PATH)
+    public ResponseEntity updateItemInCart(@RequestBody @Validated AddToCartRequest request) {
+
+        shoppingCart.putInCart(request);
 
         return ResponseEntity.ok().build();
     }
